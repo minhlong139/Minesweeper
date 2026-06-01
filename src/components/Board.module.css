@@ -1,0 +1,12 @@
+.board {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 9), 1fr);
+  gap: 0;
+  width: 100%;
+  user-select: none;
+  touch-action: manipulation;
+  -webkit-touch-callout: none;
+  border: 3px solid;
+  border-color: #7b7b7b #ffffff #ffffff #7b7b7b;
+  background: #c0c0c0;
+}
