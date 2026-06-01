@@ -1,36 +1,6 @@
-<!--
-  ============================================================================
-  CONSTITUTION TEMPLATE — Nhà Máy Phần Mềm AI
-  ============================================================================
-  Đây là TEMPLATE chuẩn hoá, độc lập với tech stack & dự án cụ thể.
-  Giữ nguyên triết lý: Spec-Kit Workflow · HITL · Harness Engineering · Governance.
-
-  CÁCH DÙNG:
-  1. Sao chép file này thành `constitution.md` ở thư mục gốc (repo root) của dự án mới.
-  2. Tìm tất cả marker `【ĐIỀN: ... 】` và điền nội dung dự án.
-  3. Tìm tất cả marker `〔CHỌN: ...〕` và chọn 1 phương án, xoá phần còn lại.
-  4. Xoá các dòng `> 💡 GỢI Ý` sau khi đã điền xong.
-  5. Cập nhật Version / Ngày phê duyệt / Sửa đổi lần cuối ở phần đầu.
-  6. Xoá toàn bộ block comment hướng dẫn này.
-
-  Ai chịu trách nhiệm điền:
-  - PO/BO     → mục có nhãn 〘PO/BO〙 (nghiệp vụ, phạm vi, sản phẩm)
-  - Tech Lead → mục có nhãn 〘TECH LEAD〙 (stack, kiến trúc, quy ước, risk)
-
-  Sync Impact Report (cập nhật mỗi lần sửa đổi):
-    Version change: 0.0.0 → 1.0.0 (khởi tạo template)
-    Template phụ thuộc cần rà soát khi thay đổi:
-      - specs/NNN/plan.md   — Constitution Check gate
-      - specs/NNN/spec.md
-      - specs/NNN/tasks.md
-  ============================================================================
--->
-
 # Constitution — Minesweeper
 
 **Phiên bản**: 1.0.0 | **Ngày phê duyệt**: 2026-06-01 | **Sửa đổi lần cuối**: 2026-06-01
-
-> 💡 GỢI Ý: Đây là tài liệu có thẩm quyền cao nhất của dự án. Mọi AI Agent và thành viên phải đọc trước khi làm việc.
 
 ---
 
@@ -208,42 +178,30 @@ Bắt buộc:
 - Security scanning trong CI/CD pipeline
 - Tách biệt hoàn toàn credential giữa các môi trường
 
-Các môi trường bắt buộc tách biệt:
+Môi trường (frontend-only, deploy trên Vercel):
 
 ```
-〔CHỌN: local → dev → sit → uat → prod  |  local → dev → staging → prod 〕
+local → Vercel Preview (per-branch) → Vercel Production (main)
 ```
-> 💡 GỢI Ý 〘TECH LEAD〙: Khai báo đúng số môi trường mà dự án sử dụng.
 
-Không sử dụng dữ liệu production trong môi trường dev/test.
+Không có backend, không có database — toàn bộ game state nằm ở client (browser).
 
-## 2.3 Kiến trúc API-first
+## 2.3 Static Site — Frontend Only
 
-Mọi tích hợp phải theo hướng API-first.
+Dự án là game Minesweeper thuần frontend, không có backend.
 
-- Mọi tích hợp đi qua API, không gọi database trực tiếp từ client
-- Tách rời (decoupled) hoàn toàn frontend/backend
-- Event-driven cho các luồng bất đồng bộ (async) khi áp dụng
-- Sẵn sàng cho tương lai (future-ready): mobile app, tích hợp bên ngoài
-- API contract chuẩn hoá (vd: OpenAPI / Swagger) bắt buộc cho mọi public API
+- Toàn bộ logic chạy trên browser (client-side)
+- Không có API server, không có database
+- Deploy dưới dạng static site lên Vercel
+- Game state lưu trong browser (localStorage / sessionStorage), không gửi lên server
 
-Chuẩn API:
-- Có version: `/v1/...`
-- Cấu trúc error response rõ ràng (structured error response)
-- Correlation ID
+## 2.4 Deploy trên Vercel
 
-## 2.4 Cloud-native & Stateless
-
-Ưu tiên kiến trúc cloud-native.
-
-- Service stateless, có thể scale ngang (horizontal scalable)
-- Infrastructure as Code — không cấu hình thủ công
-- Triển khai bất biến (immutable deployment)
-- Auto scaling
-- Logging tập trung (centralized logging)
-- Tự động phục hồi (automated recovery)
-
-Không deploy thủ công trực tiếp trên server production.
+- Static site deploy qua Vercel (tích hợp GitHub)
+- Mỗi PR tự động tạo Vercel Preview deployment
+- Merge vào `main` → tự động deploy lên Vercel Production
+- Không cần server, không cần auto-scaling — Vercel xử lý CDN & cache toàn cầu
+- Không deploy thủ công — mọi deploy qua CI/CD pipeline
 
 ## 2.5 Phát triển có AI hỗ trợ (AI-assisted Development)
 
@@ -260,43 +218,39 @@ Tuy nhiên:
 
 # 3. Tiêu chuẩn Technology Stack
 
-> 💡 GỢI Ý 〘TECH LEAD〙: Mục này CHƯA điền. Khai báo stack chính thức của dự án.
-> Sau khi chốt, stack này là default đã kiểm chứng — mọi thay đổi khác (deviation) phải ghi ADR
-> trong `/decisions` và khai báo rõ trong `AGENTS.md`.
-
 ## 3.1 Stack mặc định
 
 | Lớp | Công nghệ |
 |---|---|
-| Ngôn ngữ | 【ĐIỀN: ... 】 |
-| Framework | 【ĐIỀN: ... 】 |
-| Frontend / UI | 【ĐIỀN: ... 】 |
-| Backend / API | 【ĐIỀN: ... 】 |
-| Database | 【ĐIỀN: ... 】 |
-| ORM / Data access | 【ĐIỀN: ... 】 |
-| Auth | 【ĐIỀN: ... 】 |
-| Infra / Hosting | 【ĐIỀN: ... 】 |
-| IaC | 【ĐIỀN: ... 】 |
+| Ngôn ngữ | TypeScript |
+| Framework | React 19 |
+| Build tool | Vite |
+| Frontend / UI | React + CSS (CSS Modules hoặc CSS variables) |
+| Backend / API | **Không có** — frontend-only |
+| Database | **Không có** — game state trong localStorage |
+| Auth | **Không có** |
+| Infra / Hosting | Vercel (static site) |
+| CI/CD | GitHub Actions → Vercel deploy |
 
-## 3.2 Tiêu chuẩn Frontend (nếu có UI)
+## 3.2 Tiêu chuẩn Frontend
 
 | Khía cạnh | Tiêu chuẩn |
 |---|---|
-| Styling | 【ĐIỀN: ... 】 — không hardcode màu/font/layout |
-| Quản lý state | 【ĐIỀN: ... 】 |
-| i18n (đa ngôn ngữ) | 【ĐIỀN: ... 】 (vd: URL prefix `/{lang}/...`) |
-| Mục tiêu hiệu năng | 【ĐIỀN: vd Lighthouse > 85, Core Web Vitals đạt chuẩn 】 |
+| Styling | CSS Modules hoặc CSS variables — không hardcode màu/font/layout |
+| Quản lý state | React hooks (`useMinesweeper`, `useState`, `useReducer`) — game state tập trung trong custom hook |
+| Responsive | Hỗ trợ desktop + mobile — CSS Grid tự động scale cell theo container |
+| Mục tiêu hiệu năng | Nhẹ, tải nhanh — Vite tree-shaking, không dependency nặng |
 
-Frontend phải: responsive đa thiết bị, theo Design System, ưu tiên component tái sử dụng, hỗ trợ accessibility, SEO-ready cho các trang public. Tách biệt business logic và phần render UI.
+- Tách biệt game logic (engine module thuần TypeScript) và UI (React components)
+- Code tổ chức: `src/game/` (engine), `src/components/` (UI), `src/hooks/` (state)
+- Hỗ trợ click trái (mở ô) + click phải (cắm cờ) + single tap chord
 
 ## 3.3 DevOps & CI/CD
 
-Toàn bộ pipeline phải tự động hóa 100%. Không cấu hình hạ tầng thủ công.
-
-Pipeline chuẩn (tối thiểu):
+Pipeline tự động trên GitHub Actions:
 
 ```
-Code Commit → PR Validation (lint + test + build) → 【ĐIỀN: Deploy target 】
+Code Commit → PR Validation (lint) → Merge main → Vercel Auto Deploy
 ```
 
 ---
@@ -313,18 +267,16 @@ project-root/
 ├── TECHLEAD_AGENT.md             ← Quy tắc cho Tech Lead AI Agent
 ├── DEV_AGENT.md                  ← Quy tắc cho Dev AI Agent
 ├── QA_AGENT.md                   ← Quy tắc cho QA AI Agent
-├── DESIGN_AGENT.md               ← Quy tắc cho Design AI Agent (nếu có UI)
+├── DESIGN_AGENT.md               ← Quy tắc cho Design AI Agent
 │
 ├── specs/                        ← Nguồn sự thật của yêu cầu & thiết kế
 │   └── NNN-feature-name/
 │       ├── spec.md               ← Business spec, user story, acceptance criteria
-│       ├── plan.md               ← Technical plan, kiến trúc, API, data
+│       ├── plan.md               ← Technical plan, kiến trúc module
 │       ├── tasks.md              ← Phân rã task kèm Definition of Done
 │       ├── research.md           ← Giả định, ràng buộc, phân tích
-│       ├── design.md             ← UI/UX prototype (HTML hoặc link)
-│       ├── data-model.md         ← Schema, ER diagram
-│       ├── contracts/            ← API spec, kiểu request/response
-│       └── quickstart.md         ← Hướng dẫn setup, run, verify
+│       ├── design.md             ← UI/UX prototype
+│       └── quickstart.md         ← Hướng dẫn mở file, chạy local
 │
 ├── design/
 │   └── NNN-feature-name/
@@ -333,45 +285,62 @@ project-root/
 │       ├── design-checklist.md
 │       └── assets/
 │
-├── src/                          ← Mã nguồn (cấu trúc theo dự án)
-├── tests/
-│   ├── unit/
-│   ├── integration/
-│   └── e2e/
+├── src/                          ← Mã nguồn (React + TypeScript + Vite)
+│   ├── main.tsx                  ← Entry point
+│   ├── App.tsx                   ← App shell
+│   ├── styles/
+│   │   └── global.css            ← CSS variables, reset
+│   ├── components/
+│   │   ├── GameShell.tsx
+│   │   ├── StatusBar.tsx
+│   │   ├── DifficultySelector.tsx
+│   │   ├── Board.tsx
+│   │   ├── Cell.tsx
+│   │   ├── ControlBar.tsx
+│   │   └── GameMessage.tsx
+│   ├── game/                     ← Game engine (pure TS, không React)
+│   │   ├── types.ts
+│   │   ├── constants.ts
+│   │   ├── board.ts
+│   │   ├── reveal.ts
+│   │   ├── flag.ts
+│   │   ├── chord.ts
+│   │   ├── win.ts
+│   │   └── timer.ts
+│   ├── hooks/
+│   │   ├── useMinesweeper.ts
+│   │   ├── useLongPress.ts
+│   │   └── useDoubleTap.ts
+│   ├── storage/
+│   │   └── localStorage.ts
+│   └── assets/
 │
-├── infra/
-│   ├── 【ĐIỀN: terraform / cdk / ... 】
-│   └── environments/             ← theo danh sách môi trường tại mục 2.2
+├── tests/
+│   └── unit/                     ← Unit test cho game engine
 │
 ├── docs/
-│   ├── architecture/
-│   │   ├── architecture.md       ← Mermaid diagram — LUÔN đồng bộ với .drawio
-│   │   └── architecture.drawio   ← draw.io source — commit cùng lúc với .md
-│   ├── api/
-│   └── runbooks/
+│   └── architecture/
+│       └── architecture.md       ← Mermaid diagram kiến trúc module game
 │
 ├── decisions/                    ← Architecture Decision Records (ADR)
-├── knowledge/                    ← Bài học rút ra (lessons learned) sau mỗi lần delivery
-├── postmortems/                  ← Báo cáo sự cố, phân tích nguyên nhân gốc
+├── knowledge/                    ← Bài học rút ra (lessons learned)
+├── postmortems/                  ← Báo cáo sự cố
 │
 ├── scripts/
 │   ├── setup-dev.sh              ← [BẮT BUỘC]
 │   ├── run-tests.sh              ← [BẮT BUỘC]
 │   └── verify-pr.sh              ← [BẮT BUỘC]
 │
-├── qa/
-│   ├── test-plan.md
-│   ├── regression-checklist.md
-│   └── reports/
-│
-└── .ci/                          ← 〔CHỌN: .github/workflows/ | .gitlab-ci.yml | bitbucket-pipelines.yml 〕
+└── .github/
+    └── workflows/
+        └── ci.yml                ← CI: lint + test + Vercel deploy
 ```
 
 ## 4.2 Quy tắc tài liệu
 
 - `architecture.md` và `architecture.drawio` PHẢI được commit trong cùng một commit — không commit riêng lẻ. PR vi phạm quy tắc này sẽ bị reject.
 - Tài liệu spec viết bằng tiếng Việt (theo mục 0). Thuật ngữ kỹ thuật và tên class/biến/hàm giữ nguyên tiếng Anh.
-- Mọi feature phải có: business spec + acceptance criteria + technical design + API contract.
+- Mọi feature phải có: business spec + acceptance criteria + technical design.
 - ADR lưu trong `/decisions` — gồm: bối cảnh (context), các phương án (alternatives), đánh đổi (tradeoffs), quyết định (decision), tác động (impact).
 - Sau mỗi sự cố/lần delivery lớn: cập nhật `/knowledge` và `/postmortems`.
 - Không tạo hệ tài liệu song song nằm ngoài cấu trúc repo chuẩn.
@@ -388,9 +357,9 @@ project-root/
 - Giữ tiếng Anh: tên riêng, thuật ngữ chuyên ngành, định danh trong mã nguồn
 
 ## Bối cảnh dự án (Project Context)
-- Sản phẩm/module: 【ĐIỀN: Tên dự án 】
-- Tech stack: 【ĐIỀN: Liệt kê cụ thể — đồng bộ với section 3 】
-- Tóm tắt kiến trúc: 【ĐIỀN: Mô tả ngắn — service, database, messaging 】
+- Sản phẩm/module: Minesweeper Game
+- Tech stack: React + TypeScript + Vite — deploy trên Vercel (xem Constitution Section 3)
+- Tóm tắt kiến trúc: Frontend-only static site — game engine chạy trên browser, không backend, không database
 
 ## Nguồn sự thật (Source of Truth)
 - Yêu cầu/spec: `specs/`
@@ -422,11 +391,11 @@ project-root/
 - Post-release verification phải do người chịu trách nhiệm xác nhận
 
 ## Quy tắc Coding
-- Quy ước đặt tên: 【ĐIỀN: camelCase/PascalCase/snake_case theo layer 】
-- Quy ước API: có version (/v1/...), structured error response, correlation ID
-- Xử lý lỗi: 【ĐIỀN: Mô tả pattern 】
+- Quy ước đặt tên: camelCase cho biến/hàm, PascalCase cho class, kebab-case cho file CSS/HTML
+- Không có API (frontend-only) — game logic gọi trực tiếp từ DOM event
+- Xử lý lỗi: try-catch trong game engine, hiển thị lỗi qua UI (không console.log bừa bãi)
 - Quy tắc bảo mật: Không log dữ liệu nhạy cảm; validate input; sanitize output
-- Quy tắc test: Unit test cho business logic; integration test cho API; E2E cho luồng quan trọng
+- Quy tắc test: Unit test cho game engine (tạo bàn cờ, đặt mìn, mở ô, thắng/thua)
 
 ## Lệnh (Commands)
 \`\`\`bash
@@ -486,8 +455,7 @@ specify → design → clarify → plan → tasks → implement → test → uat
 | uat | AI làm – người duyệt | Chạy test & gom evidence nghiệm thu | PO/BO ra quyết định pass/fail | Nghiệm thu (acceptance) trên issue |
 | deploy | Người chốt | Soạn release note, rollback plan (chờ duyệt) | Tech Lead / DevOps release production | Release note, pipeline |
 
-> 💡 GỢI Ý: Cột "Mô hình" quy định ai có quyền chốt. AI luôn được phép sinh nháp ở mọi phase,
-> nhưng artifact chỉ có hiệu lực sau khi người ở cột "Người làm (chốt)" phê duyệt theo đúng mô hình.
+Cột "Mô hình" quy định ai có quyền chốt. AI luôn được phép sinh nháp ở mọi phase, nhưng artifact chỉ có hiệu lực sau khi người ở cột "Người làm (chốt)" phê duyệt theo đúng mô hình.
 
 Quy tắc:
 - `design` đi ngay sau `specify`, trước `clarify` — không clarify khi chưa hình dung được UI
@@ -597,7 +565,7 @@ Ký hiệu phân vai: **[AI]** AI tự làm · **[AI→duyệt]** AI làm, ngư�
 [AI]          □ Chạy init-project.sh: khởi tạo cấu trúc thư mục, copy template,
                   git init, commit khởi tạo
 [AI]          □ Viết AGENTS.md (dùng template section 4.3)
-[AI]          □ Scaffold constitution.md (kế thừa từ template này) + điền marker 【ĐIỀN】 đã biết
+[AI]          □ Scaffold constitution.md — đã hoàn thành (không còn marker nào chưa điền)
 [AI]          □ Setup pipeline trong .github/workflows/ với stage tối thiểu (lint + test + build)
 
 [Người]       □ Tạo repository trên GitHub (thủ công hoặc qua MCP GitHub — xem mục 1.5)

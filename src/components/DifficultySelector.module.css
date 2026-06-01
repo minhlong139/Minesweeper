@@ -1,0 +1,38 @@
+.selector {
+  display: flex;
+  gap: 6px;
+}
+
+.btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6px 4px;
+  border: 2px solid;
+  border-color: #ffffff #7b7b7b #7b7b7b #ffffff;
+  background: #c0c0c0;
+  font-size: 0.85rem;
+  cursor: pointer;
+  min-height: 48px;
+  justify-content: center;
+}
+
+.btn:active {
+  border-color: #7b7b7b #ffffff #ffffff #7b7b7b;
+}
+
+.active {
+  background: #a0a0d0;
+  border-color: #7b7b7b #ffffff #ffffff #7b7b7b;
+}
+
+.label {
+  font-weight: 600;
+}
+
+.best {
+  font-size: 0.7rem;
+  color: #555;
+  margin-top: 2px;
+}

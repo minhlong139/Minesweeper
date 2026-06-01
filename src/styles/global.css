@@ -1,0 +1,74 @@
+:root {
+  /* ── Colors ───────────────────────────────────────────── */
+  --color-bg: #e0e0e0;
+  --color-cell-hidden: #c0c0c0;
+  --color-cell-revealed: #d0d0d0;
+  --color-cell-border-light: #ffffff;
+  --color-cell-border-dark: #808080;
+  --color-n1: #0000ff;
+  --color-n2: #008000;
+  --color-n3: #cc0000;
+  --color-n4: #000080;
+  --color-n5: #800000;
+  --color-n6: #006666;
+  --color-n7: #000000;
+  --color-n8: #666666;
+  --color-mine: #000000;
+  --color-exploded-bg: #ff0000;
+  --color-flag: #ff0000;
+  --color-text: #222222;
+
+  /* ── Layout ───────────────────────────────────────────── */
+  --board-max-width: 480px;
+  --cell-min-size: 28px;
+  --control-height: 52px;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* ── Reset ──────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-family: var(--font);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  min-height: 100dvh;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-size: inherit;
+}
+
+/* ── App Shell ─────────────────────────────────────────── */
+.app-shell {
+  width: 100%;
+  max-width: var(--board-max-width);
+  margin: 0 auto;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  gap: 8px;
+}
+
+@media (min-width: 768px) {
+  .app-shell {
+    max-width: 520px;
+    padding: 16px;
+    gap: 12px;
+  }
+}

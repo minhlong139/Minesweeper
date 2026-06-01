@@ -1,0 +1,30 @@
+.bar {
+  display: flex;
+  gap: 6px;
+  position: sticky;
+  bottom: 0;
+  background: var(--color-bg);
+  padding: 6px 0;
+  padding-bottom: calc(6px + env(safe-area-inset-bottom, 0px));
+}
+
+.btn {
+  flex: 1;
+  padding: 12px 8px;
+  border: 2px solid;
+  border-color: #ffffff #7b7b7b #7b7b7b #ffffff;
+  background: #c0c0c0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  min-height: 44px;
+}
+
+.btn:active {
+  border-color: #7b7b7b #ffffff #ffffff #7b7b7b;
+}
+
+.active {
+  background: #a0a0d0;
+  border-color: #7b7b7b #ffffff #ffffff #7b7b7b;
+}
