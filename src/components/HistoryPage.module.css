@@ -1,0 +1,147 @@
+.container {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 16px;
+  width: 100%;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.backBtn {
+  padding: 8px 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+
+.backBtn:hover {
+  background: #f5f5f5;
+}
+
+.title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.section {
+  margin-bottom: 24px;
+}
+
+.sectionTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #555;
+  margin: 0 0 12px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.bestGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.bestCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 8px;
+  background: #f8f8f8;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+}
+
+.bestLabel {
+  font-size: 0.8rem;
+  color: #888;
+  margin-bottom: 4px;
+}
+
+.bestTime {
+  font-size: 1.1rem;
+  font-weight: 700;
+  font-family: "Courier New", monospace;
+  color: #333;
+}
+
+.historyList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.historyItem {
+  display: grid;
+  grid-template-columns: 130px 1fr auto 70px;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.historyDate {
+  color: #888;
+  font-size: 0.8rem;
+}
+
+.historyDiff {
+  font-weight: 500;
+}
+
+.historyWon {
+  color: #2e7d32;
+  font-weight: 600;
+  text-align: right;
+}
+
+.historyLost {
+  color: #c62828;
+  font-weight: 600;
+  text-align: right;
+}
+
+.historyTime {
+  font-family: "Courier New", monospace;
+  font-weight: 600;
+  color: #333;
+  text-align: right;
+}
+
+.loading,
+.empty,
+.error {
+  text-align: center;
+  padding: 48px 16px;
+  color: #888;
+  font-size: 1rem;
+}
+
+.error {
+  color: #c62828;
+}
+
+@media (max-width: 480px) {
+  .historyItem {
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+    padding: 8px;
+  }
+
+  .historyDate {
+    grid-column: 1 / -1;
+  }
+}

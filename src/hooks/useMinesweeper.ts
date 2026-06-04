@@ -1,4 +1,4 @@
-import { useReducer, useEffect, useCallback } from "react";
+import { useReducer, useEffect, useCallback, useRef } from "react";
 import type { GameState, DifficultyLevel, ControlMode, Cell } from "../game";
 import {
   DIFFICULTIES,
@@ -11,9 +11,9 @@ import {
   autoFlagMines,
   chordReveal,
   checkWin,
-  cloneBoard,
   STORAGE_KEYS,
 } from "../game";
+import { saveGameResult } from "../firebase/firestore";
 
 // ── State ──────────────────────────────────────────────────────────────────
 
@@ -253,8 +253,9 @@ function gameReducer(state: UIState, action: GameAction): UIState {
 
 // ── Hook ───────────────────────────────────────────────────────────────────
 
-export function useMinesweeper() {
+export function useMinesweeper(userId: string | null) {
   const [state, dispatch] = useReducer(gameReducer, null, createInitialState);
+  const prevStatus = useRef(state.status);
 
   // Timer
   useEffect(() => {
@@ -262,6 +263,31 @@ export function useMinesweeper() {
     const id = setInterval(() => dispatch({ type: "TICK" }), 1000);
     return () => clearInterval(id);
   }, [state.timerRunning]);
+
+  // Save game result when status changes to won/lost
+  useEffect(() => {
+    if (!userId) return;
+    const wasPlaying =
+      prevStatus.current === "idle" || prevStatus.current === "playing";
+    const isEnded = state.status === "won" || state.status === "lost";
+    if (!wasPlaying || !isEnded) {
+      prevStatus.current = state.status;
+      return;
+    }
+    prevStatus.current = state.status;
+
+    const cfg = DIFFICULTIES[state.difficulty];
+    saveGameResult(userId, {
+      difficulty: state.difficulty,
+      status: state.status,
+      time: state.status === "won" ? state.elapsedSeconds : 0,
+      rows: cfg.rows,
+      cols: cfg.cols,
+      mines: cfg.mines,
+    }).catch(() => {
+      /* firestore unavailable — game still works offline */
+    });
+  }, [state.status, userId, state.difficulty, state.elapsedSeconds]);
 
   const newGame = useCallback((difficulty: DifficultyLevel) => {
     dispatch({ type: "NEW_GAME", difficulty });
