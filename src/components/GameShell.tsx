@@ -4,14 +4,32 @@ import { DifficultySelector } from "./DifficultySelector";
 import { Board } from "./Board";
 import { ControlBar } from "./ControlBar";
 import { GameMessage } from "./GameMessage";
+import UserMenu from "./UserMenu";
+import BestTimes from "./BestTimes";
 import styles from "./GameShell.module.css";
 
-export function GameShell() {
-  const game = useMinesweeper();
+interface GameShellProps {
+  userId: string | null;
+  onOpenLogin: () => void;
+  onNavigateHistory: () => void;
+}
+
+export function GameShell({
+  userId,
+  onOpenLogin,
+  onNavigateHistory,
+}: GameShellProps) {
+  const game = useMinesweeper(userId);
 
   return (
     <div className={styles.shell}>
-      <h1 className={styles.title}>Minesweeper</h1>
+      <div className={styles.header}>
+        <h1 className={styles.title}>Minesweeper</h1>
+        <UserMenu
+          onOpenLogin={onOpenLogin}
+          onNavigateHistory={onNavigateHistory}
+        />
+      </div>
       <StatusBar
         mineCount={game.mineCount}
         flagsPlaced={game.flagsPlaced}
@@ -19,10 +37,13 @@ export function GameShell() {
         status={game.status}
         onReset={() => game.newGame(game.difficulty)}
       />
-      <DifficultySelector
-        current={game.difficulty}
-        onSelect={game.newGame}
-      />
+      <div className={styles.diffRow}>
+        <DifficultySelector
+          current={game.difficulty}
+          onSelect={game.newGame}
+        />
+        <BestTimes userId={userId} difficulty={game.difficulty} />
+      </div>
       <Board
         board={game.board}
         status={game.status}

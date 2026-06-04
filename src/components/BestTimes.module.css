@@ -1,0 +1,11 @@
+.container {
+  font-size: 0.85rem;
+  color: #666;
+  white-space: nowrap;
+}
+
+.time {
+  font-weight: 700;
+  font-family: "Courier New", monospace;
+  color: #333;
+}
