@@ -83,6 +83,52 @@
 - Critical: đầy đủ + multi-approval + rollback plan + post-release verification
 - AI Agent gợi ý risk level, Tech Lead chốt
 
+## Workflow tự động — Quản lý trạng thái Issue qua Labels
+
+AI Agent tự động cập nhật label trên issue theo trạng thái công việc.
+
+### Bảng trạng thái
+
+| Label | Ý nghĩa | Trigger (AI tự làm) |
+|-------|---------|---------------------|
+| `planned` | Backlog, chưa bắt đầu | Mặc định khi tạo issue |
+| `ready` | Đã phân tích, sẵn sàng code | Sau khi đọc hiểu issue + xác định giải pháp |
+| `in-progress` | Đang code | Khi tạo branch + bắt đầu sửa code |
+| `in-review` | Đã tạo PR, chờ review | Sau khi commit + push + tạo PR, build & test pass |
+| `needs-fix` | Cần sửa sau review | Khi có review comment yêu cầu thay đổi |
+| `done` | Hoàn thành, đã merge | **[Người]** — chỉ human mới close issue |
+
+### Quy tắc
+- **[AI]** Tự cập nhật label: `ready`, `in-progress`, `in-review`, `needs-fix`
+- **[Người]** HITL: `done` (close issue) — chỉ sau khi PR được merge
+- Mỗi issue chỉ có 1 label trạng thái tại 1 thời điểm
+- Luôn giữ lại label loại issue (`bug`, `enhancement`, `task`, `spec`, `openhands-agent`)
+
+### API cập nhật label
+
+```bash
+# Cập nhật labels cho issue
+curl -X PATCH \
+  -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+  -H "Accept: application/vnd.github+json" \
+  "https://api.github.com/repos/minhlong139/Minesweeper/issues/<ISSUE_NUMBER>" \
+  -d '{"labels":["<type>","<status>"]}'
+
+# type: bug | enhancement | task | spec
+# status: planned | ready | in-progress | in-review | needs-fix
+```
+
+### Ví dụ luồng tự động cho issue #X (bug)
+
+```
+1. Issue #X mới → labels: ["bug", "planned"]
+2. AI đọc issue, phân tích → labels: ["bug", "ready"]
+3. AI checkout -b fix/X, bắt đầu code → labels: ["bug", "in-progress"]
+4. AI commit + push + tạo PR → labels: ["bug", "in-review"]
+5. (nếu review yêu cầu sửa) → labels: ["bug", "needs-fix"] → quay lại step 3
+6. Human merge PR + close issue → labels: ["bug", "done"]
+```
+
 ## Phân vai 3 nhóm (xem constitution Section 1.4, 5.2)
 - [Người] HITL — AI không tự thực hiện
 - [AI→duyệt] AI sinh nháp, người phê duyệt
