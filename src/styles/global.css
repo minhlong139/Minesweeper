@@ -63,6 +63,7 @@ button {
   flex-direction: column;
   padding: 8px;
   gap: 8px;
+  overflow-x: hidden;
 }
 
 @media (min-width: 768px) {

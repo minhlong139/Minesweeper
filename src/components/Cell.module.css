@@ -1,12 +1,11 @@
 .cell {
-  aspect-ratio: 1 / 1;
-  min-width: 0;
-  width: 100%;
+  width: var(--cell-size, 28px);
+  height: var(--cell-size, 28px);
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: clamp(10px, 2.5vw, 18px);
+  font-size: clamp(10px, calc(var(--cell-size, 28px) * 0.55), 20px);
   border: none;
   padding: 0;
   cursor: pointer;

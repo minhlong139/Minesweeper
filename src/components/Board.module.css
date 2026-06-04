@@ -1,8 +1,13 @@
+.wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
 .board {
   display: grid;
-  grid-template-columns: repeat(var(--cols, 9), 1fr);
+  grid-template-columns: repeat(var(--cols, 9), var(--cell-size, 28px));
   gap: 0;
-  width: 100%;
   user-select: none;
   touch-action: manipulation;
   -webkit-touch-callout: none;
